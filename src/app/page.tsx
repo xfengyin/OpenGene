@@ -8,6 +8,7 @@ import AIDiagnostic from '@/components/project/AIDiagnostic'
 import { ErrorBoundary, Loading, Toast } from '@/components/ui/Feedback'
 import { useAppStore } from '@/lib/store'
 
+
 export default function Home() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   
@@ -138,6 +139,12 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-4">
+            <a 
+              href="/blog"
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition"
+            >
+              📝 博客
+            </a>
             <button 
               onClick={() => setActiveView('galaxy')}
               className={`px-4 py-2 rounded-lg transition ${activeView === 'galaxy' ? 'bg-purple-600' : 'bg-gray-800 hover:bg-gray-700'}`}
