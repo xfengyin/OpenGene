@@ -5,7 +5,9 @@ const nextConfig = {
     domains: ['avatars.githubusercontent.com', 'github.com'],
     unoptimized: true,
   },
-
+  // GitHub Pages 基础路径配置
+  basePath: '/OpenGene',
+  assetPrefix: '/OpenGene',
   // 静态导出配置
   output: 'export',
   distDir: 'dist',

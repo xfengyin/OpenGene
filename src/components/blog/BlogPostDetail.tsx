@@ -97,7 +97,7 @@ export default function BlogPostDetail() {
         description="这篇文章可能已被删除或不存在"
         action={{
           label: '返回博客首页',
-          onClick: () => window.location.href = '/blog'
+          onClick: () => window.location.href = '/OpenGene/blog/'
         }}
       />
     )
@@ -107,7 +107,7 @@ export default function BlogPostDetail() {
     <article className="max-w-4xl mx-auto px-4 py-8">
       {/* 返回链接 */}
       <Link
-        href="/blog"
+        href="/OpenGene/blog/"
         className="inline-flex items-center gap-2 text-gray-400 hover:text-purple-400 transition mb-6"
       >
         ← 返回博客
@@ -216,7 +216,7 @@ export default function BlogPostDetail() {
             {relatedPosts.map(relatedPost => (
               <Link
                 key={relatedPost.id}
-                href={`/blog/${relatedPost.slug}`}
+                href={`/OpenGene/blog/${relatedPost.slug}/`}
                 className="block bg-gray-900/50 border border-gray-800 rounded-xl p-4 card-hover"
               >
                 <h4 className="font-bold mb-2 line-clamp-2">{relatedPost.title}</h4>
