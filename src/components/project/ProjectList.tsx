@@ -24,7 +24,7 @@ export default function ProjectList({ projects }: ProjectListProps) {
   const [selectedLifecycle, setSelectedLifecycle] = useState('all')
 
   // 获取所有语言
-  const languages = Array.from(new Set(projects.map(p => p.language).filter(Boolean))) as string[]
+  const languages = Array.from(new Set(projects.map(p => p.language).filter((lang): lang is string => lang !== null)))
 
   const filteredProjects = projects.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

@@ -157,7 +157,7 @@ export default function BlogList() {
                 
                 {/* 标题 */}
                 <h2 className="text-xl font-bold mb-2 line-clamp-2 hover:text-purple-400 transition">
-                  <Link href={`/OpenGene/blog/${post.slug}/`}>
+                  <Link href={`/blog/${post.slug}/`}>
                     {post.title}
                   </Link>
                 </h2>
