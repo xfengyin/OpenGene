@@ -63,7 +63,7 @@ function generateBasicAnalysis(
     lifecycle,
     tags,
     predictedGrowth: recentCommits > 10 ? '+10-20% in next 30 days' : 'Stable',
-    learningPath: generateLearningPath(difficulty)
+    learningPath: getLearningPathByDifficulty(difficulty)
   }
 }
 
@@ -89,7 +89,7 @@ function getRecommendation(score: number, difficulty: string): string {
   }
 }
 
-function generateLearningPath(difficulty: string): string[] {
+function getLearningPathByDifficulty(difficulty: string): string[] {
   const paths: Record<string, string[]> = {
     'BEGINNER': [
       '阅读项目文档和 README',

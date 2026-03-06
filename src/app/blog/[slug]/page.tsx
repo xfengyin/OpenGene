@@ -1,10 +1,18 @@
 import BlogPostDetail from '@/components/blog/BlogPostDetail'
 import BlogNav from '@/components/blog/BlogNav'
 import { Metadata } from 'next'
+import { mockBlogPosts } from '@/types/blog'
 
 export const metadata: Metadata = {
   title: '文章详情 - OpenGene',
   description: '阅读开源世界的精彩故事'
+}
+
+// 为静态导出生成所有可能的文章路径
+export function generateStaticParams() {
+  return mockBlogPosts.map((post) => ({
+    slug: post.slug,
+  }))
 }
 
 export default function BlogPostPage() {

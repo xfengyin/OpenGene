@@ -5,9 +5,7 @@ const nextConfig = {
     domains: ['avatars.githubusercontent.com', 'github.com'],
     unoptimized: true,
   },
-  experimental: {
-    serverActions: true,
-  },
+
   // 静态导出配置
   output: 'export',
   distDir: 'dist',

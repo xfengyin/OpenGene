@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { BlogPost } from '@/types/blog'
+import { BlogPost, mockBlogPosts } from '@/types/blog'
 import { Loading, EmptyState } from '@/components/ui/Feedback'
 
 export default function BlogPostDetail() {
@@ -21,15 +21,25 @@ export default function BlogPostDetail() {
     }
   }, [slug])
 
-  const loadPost = async () => {
+  const loadPost = () => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/posts/${slug}`)
-      const data = await response.json()
+      // 从本地数据查找文章
+      const foundPost = mockBlogPosts.find(p => p.slug === slug && p.status === 'published')
       
-      if (data.post) {
-        setPost(data.post)
-        setRelatedPosts(data.relatedPosts || [])
+      if (foundPost) {
+        setPost(foundPost)
+        
+        // 获取相关文章
+        const related = mockBlogPosts
+          .filter(p => 
+            p.id !== foundPost.id && 
+            p.status === 'published' &&
+            (p.category === foundPost.category || p.tags.some(t => foundPost.tags.includes(t)))
+          )
+          .slice(0, 3)
+        
+        setRelatedPosts(related)
       }
     } catch (error) {
       console.error('Failed to load post:', error)

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { BlogPost, blogCategories } from '@/types/blog'
+import { BlogPost, blogCategories, mockBlogPosts } from '@/types/blog'
 import { Loading, EmptyState } from '@/components/ui/Feedback'
 
 export default function BlogList() {
@@ -16,26 +16,35 @@ export default function BlogList() {
     loadPosts()
   }, [selectedCategory, page])
 
-  const loadPosts = async () => {
+  const loadPosts = () => {
     setLoading(true)
     try {
-      const params = new URLSearchParams()
-      params.append('page', String(page))
-      params.append('limit', '10')
+      // 从本地数据筛选
+      let filteredPosts = mockBlogPosts.filter(p => p.status === 'published')
+      
+      // 分类筛选
       if (selectedCategory !== 'all') {
-        params.append('category', selectedCategory)
+        filteredPosts = filteredPosts.filter(p => p.category === selectedCategory)
       }
       
-      const response = await fetch(`/api/posts?${params}`)
-      const data = await response.json()
+      // 按时间排序
+      filteredPosts = filteredPosts.sort((a, b) => 
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      )
+      
+      // 分页
+      const limit = 10
+      const start = (page - 1) * limit
+      const end = start + limit
+      const paginatedPosts = filteredPosts.slice(start, end)
       
       if (page === 1) {
-        setPosts(data.posts)
+        setPosts(paginatedPosts)
       } else {
-        setPosts(prev => [...prev, ...data.posts])
+        setPosts(prev => [...prev, ...paginatedPosts])
       }
       
-      setHasMore(data.posts.length === 10)
+      setHasMore(paginatedPosts.length === limit)
     } catch (error) {
       console.error('Failed to load posts:', error)
     } finally {
