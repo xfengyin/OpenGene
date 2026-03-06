@@ -2,34 +2,64 @@
 
 import { useEffect, useRef, useState } from 'react'
 
-interface Node {
+interface Project {
   id: string
   name: string
-  x: number
-  y: number
-  size: number
-  color: string
+  full_name: string
+  language: string | null
+  stargazers_count: number
+  forks_count: number
+  healthScore: number
+  lifecycle: string
 }
 
-const mockProjects: Node[] = [
-  { id: '1', name: 'React', x: 400, y: 300, size: 40, color: '#61DAFB' },
-  { id: '2', name: 'Vue', x: 200, y: 200, size: 35, color: '#42B883' },
-  { id: '3', name: 'Next.js', x: 600, y: 250, size: 38, color: '#000000' },
-  { id: '4', name: 'TypeScript', x: 300, y: 400, size: 45, color: '#3178C6' },
-  { id: '5', name: 'Rust', x: 500, y: 450, size: 32, color: '#DEA584' },
-  { id: '6', name: 'Go', x: 150, y: 350, size: 30, color: '#00ADD8' },
-  { id: '7', name: 'Python', x: 700, y: 350, size: 42, color: '#3776AB' },
-  { id: '8', name: 'Flutter', x: 250, y: 150, size: 28, color: '#02569B' },
-]
+interface GalaxyViewProps {
+  projects: Project[]
+}
 
-export default function GalaxyView() {
+export default function GalaxyView({ projects }: GalaxyViewProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [selectedProject, setSelectedProject] = useState<Node | null>(null)
-  const [hoveredProject, setHoveredProject] = useState<Node | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [hoveredProject, setHoveredProject] = useState<Project | null>(null)
+
+  // 生成节点位置
+  const generateNodes = (projects: Project[]) => {
+    return projects.map((project, index) => {
+      const angle = (index / projects.length) * Math.PI * 2
+      const radius = 200 + Math.random() * 200
+      const x = 400 + Math.cos(angle) * radius
+      const y = 300 + Math.sin(angle) * radius
+      const size = Math.max(20, Math.min(60, Math.log10(project.stargazers_count + 1) * 10))
+      
+      // 根据语言分配颜色
+      const colors: Record<string, string> = {
+        'TypeScript': '#3178C6',
+        'JavaScript': '#F7DF1E',
+        'Python': '#3776AB',
+        'Rust': '#DEA584',
+        'Go': '#00ADD8',
+        'Java': '#B07219',
+        'C++': '#F34B7D',
+        'C': '#555555',
+        'Ruby': '#701516',
+        'Swift': '#FFAC45',
+      }
+      
+      return {
+        ...project,
+        x,
+        y,
+        size,
+        color: colors[project.language || ''] || '#8B5CF6'
+      }
+    })
+  }
+
+  const nodes = generateNodes(projects)
 
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || projects.length === 0) return
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -52,18 +82,18 @@ export default function GalaxyView() {
 
     // 绘制连线
     const drawConnections = () => {
-      ctx.strokeStyle = 'rgba(139, 92, 246, 0.2)'
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.15)'
       ctx.lineWidth = 1
-      for (let i = 0; i < mockProjects.length; i++) {
-        for (let j = i + 1; j < mockProjects.length; j++) {
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
           const distance = Math.sqrt(
-            Math.pow(mockProjects[i].x - mockProjects[j].x, 2) +
-            Math.pow(mockProjects[i].y - mockProjects[j].y, 2)
+            Math.pow(nodes[i].x - nodes[j].x, 2) +
+            Math.pow(nodes[i].y - nodes[j].y, 2)
           )
-          if (distance < 300) {
+          if (distance < 250) {
             ctx.beginPath()
-            ctx.moveTo(mockProjects[i].x, mockProjects[i].y)
-            ctx.lineTo(mockProjects[j].x, mockProjects[j].y)
+            ctx.moveTo(nodes[i].x, nodes[i].y)
+            ctx.lineTo(nodes[j].x, nodes[j].y)
             ctx.stroke()
           }
         }
@@ -72,7 +102,7 @@ export default function GalaxyView() {
 
     // 绘制项目节点
     const drawNodes = () => {
-      mockProjects.forEach((project) => {
+      nodes.forEach((project: any) => {
         const isHovered = hoveredProject?.id === project.id
         const isSelected = selectedProject?.id === project.id
 
@@ -82,7 +112,7 @@ export default function GalaxyView() {
             project.x, project.y, 0,
             project.x, project.y, project.size * 2
           )
-          gradient.addColorStop(0, project.color + '80')
+          gradient.addColorStop(0, project.color + '60')
           gradient.addColorStop(1, 'transparent')
           ctx.beginPath()
           ctx.arc(project.x, project.y, project.size * 2, 0, Math.PI * 2)
@@ -101,9 +131,14 @@ export default function GalaxyView() {
 
         // 项目名称
         ctx.fillStyle = '#fff'
-        ctx.font = `${isHovered ? 'bold ' : ''}14px sans-serif`
+        ctx.font = `${isHovered ? 'bold ' : ''}12px sans-serif`
         ctx.textAlign = 'center'
-        ctx.fillText(project.name, project.x, project.y + project.size + 20)
+        ctx.fillText(project.name, project.x, project.y + project.size + 15)
+        
+        // Stars 数量
+        ctx.fillStyle = '#FCD34D'
+        ctx.font = '10px sans-serif'
+        ctx.fillText(`⭐ ${(project.stargazers_count / 1000).toFixed(1)}k`, project.x, project.y + project.size + 28)
       })
     }
 
@@ -113,7 +148,7 @@ export default function GalaxyView() {
     drawStars()
     drawConnections()
     drawNodes()
-  }, [hoveredProject, selectedProject])
+  }, [projects, hoveredProject, selectedProject])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
@@ -123,14 +158,14 @@ export default function GalaxyView() {
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
 
-    const hovered = mockProjects.find(p => {
+    const hovered = nodes.find((p: any) => {
       const distance = Math.sqrt(Math.pow(p.x - x, 2) + Math.pow(p.y - y, 2))
       return distance < p.size
     })
     setHoveredProject(hovered || null)
   }
 
-  const handleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const handleClick = () => {
     if (hoveredProject) {
       setSelectedProject(hoveredProject)
     }
@@ -160,22 +195,41 @@ export default function GalaxyView() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-400">语言</span>
-              <span style={{ color: selectedProject.color }}>● {selectedProject.name}</span>
+              <span style={{ color: '#8B5CF6' }}>● {selectedProject.language || 'Unknown'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">影响力</span>
-              <span className="text-purple-400">{Math.round(selectedProject.size * 100)}</span>
+              <span className="text-gray-400">Stars</span>
+              <span className="text-yellow-400">⭐ {selectedProject.stargazers_count.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Forks</span>
+              <span className="text-blue-400">🍴 {selectedProject.forks_count.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">健康度</span>
-              <span className="text-green-400">85%</span>
+              <span className={`font-bold ${selectedProject.healthScore >= 80 ? 'text-green-400' : selectedProject.healthScore >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
+                {selectedProject.healthScore}%
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">生命周期</span>
-              <span className="text-blue-400">🌳 成熟期</span>
+              <span className="text-blue-400">
+                {selectedProject.lifecycle === 'MATURE' ? '🌳' : 
+                 selectedProject.lifecycle === 'GROWING' ? '🌿' : 
+                 selectedProject.lifecycle === 'SEED' ? '🌱' : 
+                 selectedProject.lifecycle === 'DECLINING' ? '🍂' : '💀'} {selectedProject.lifecycle}
+              </span>
             </div>
           </div>
-          <button className="w-full mt-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg transition">
+          <a 
+            href={`https://github.com/${selectedProject.full_name}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full mt-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg transition text-center"
+          >
+            🔗 查看 GitHub
+          </a>
+          <button className="w-full mt-2 py-2 bg-green-600 hover:bg-green-500 rounded-lg transition">
             🔍 AI 深度诊断
           </button>
         </div>
@@ -183,8 +237,14 @@ export default function GalaxyView() {
 
       {/* 图例 */}
       <div className="absolute left-4 bottom-4 bg-gray-900/90 backdrop-blur-md rounded-lg p-3 text-sm">
-        <div className="text-gray-400 mb-2">节点大小 = 影响力</div>
-        <div className="text-gray-400">连线 = 依赖关系</div>
+        <div className="text-gray-400 mb-1">节点大小 = Stars 数量</div>
+        <div className="text-gray-400">连线 = 相似项目</div>
+        <div className="mt-2 flex gap-2 text-xs">
+          <span>🌱 Seed</span>
+          <span>🌿 Growing</span>
+          <span>🌳 Mature</span>
+          <span>🍂 Declining</span>
+        </div>
       </div>
     </div>
   )

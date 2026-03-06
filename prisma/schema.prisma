@@ -9,6 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 项目表
 model Project {
   id            String   @id @default(cuid())
   githubId      String   @unique
@@ -16,36 +17,149 @@ model Project {
   fullName      String   @unique
   description   String?
   url           String
+  homepage      String?
   language      String?
   stars         Int      @default(0)
   forks         Int      @default(0)
+  watchers      Int      @default(0)
+  openIssues    Int      @default(0)
+  closedIssues  Int      @default(0)
+  
+  // 健康度指标
   healthScore   Float    @default(0)
+  activityScore Float    @default(0)
+  popularityScore Float  @default(0)
+  maintenanceScore Float @default(0)
+  communityScore Float   @default(0)
+  
+  // 生命周期阶段: SEED, GROWING, MATURE, DECLINING, ARCHIVED
   lifecycle     String   @default("SEED")
-  aiSummary     String?
+  
+  // AI 分析结果
+  aiSummary     String?  @db.Text
+  aiTags        String[]
+  difficulty    String?  // BEGINNER, INTERMEDIATE, ADVANCED
+  
+  // 时间戳
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  lastSyncedAt  DateTime @default(now())
   
+  // 关系
+  contributors  ProjectContributor[]
+  metrics       ProjectMetric[]
+  
+  @@index([language])
+  @@index([stars])
+  @@index([healthScore])
+  @@index([lifecycle])
   @@map("projects")
 }
 
+// 贡献者
 model Contributor {
   id            String   @id @default(cuid())
   githubId      String   @unique
   username      String
   avatarUrl     String?
+  name          String?
+  bio           String?
+  location      String?
+  company       String?
+  blog          String?
+  twitter       String?
+  
+  // 荣誉系统
   rank          String   @default("BRONZE")
   points        Int      @default(0)
+  achievements  Achievement[]
+  
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  projects      ProjectContributor[]
   
   @@map("contributors")
 }
 
+// 成就系统
+model Achievement {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  icon        String
+  points      Int
+  
+  contributors Contributor[]
+  
+  @@map("achievements")
+}
+
+// 项目-贡献者关联
+model ProjectContributor {
+  id            String   @id @default(cuid())
+  projectId     String
+  contributorId String
+  contributions Int      @default(0)
+  
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  contributor   Contributor @relation(fields: [contributorId], references: [id], onDelete: Cascade)
+  
+  @@unique([projectId, contributorId])
+  @@map("project_contributors")
+}
+
+// 项目指标历史
+model ProjectMetric {
+  id            String   @id @default(cuid())
+  projectId     String
+  stars         Int
+  forks         Int
+  watchers      Int
+  openIssues    Int
+  closedIssues  Int
+  contributors  Int
+  commits       Int
+  recordedAt    DateTime @default(now())
+  
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  @@index([projectId, recordedAt])
+  @@map("project_metrics")
+}
+
+// 用户表
 model User {
   id            String   @id @default(cuid())
   email         String   @unique
   name          String?
+  image         String?
   githubId      String?  @unique
+  
+  // 学习路径
+  learningPaths LearningPath[]
+  
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
   
   @@map("users")
+}
+
+// 学习路径
+model LearningPath {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  goal        String
+  projects    String[] // 项目ID数组
+  completed   Boolean  @default(false)
+  progress    Float    @default(0)
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("learning_paths")
 }
