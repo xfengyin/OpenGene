@@ -1,0 +1,51 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  githubId      String   @unique
+  name          String
+  fullName      String   @unique
+  description   String?
+  url           String
+  language      String?
+  stars         Int      @default(0)
+  forks         Int      @default(0)
+  healthScore   Float    @default(0)
+  lifecycle     String   @default("SEED")
+  aiSummary     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@map("projects")
+}
+
+model Contributor {
+  id            String   @id @default(cuid())
+  githubId      String   @unique
+  username      String
+  avatarUrl     String?
+  rank          String   @default("BRONZE")
+  points        Int      @default(0)
+  createdAt     DateTime @default(now())
+  
+  @@map("contributors")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  githubId      String?  @unique
+  createdAt     DateTime @default(now())
+  
+  @@map("users")
+}

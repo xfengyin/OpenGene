@@ -1,0 +1,48 @@
+{
+  "name": "opengene",
+  "version": "1.0.0",
+  "description": "AI驱动的开源项目生态图谱平台",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@prisma/client": "^5.8.1",
+    "framer-motion": "^11.0.3",
+    "recharts": "^2.12.0",
+    "three": "^0.161.0",
+    "@react-three/fiber": "^8.15.12",
+    "@react-three/drei": "^9.96.5",
+    "zustand": "^4.5.0",
+    "axios": "^1.6.5",
+    "date-fns": "^3.3.1",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.316.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.5",
+    "@types/react": "18.2.48",
+    "@types/react-dom": "18.2.18",
+    "@types/three": "^0.161.2",
+    "typescript": "5.3.3",
+    "prisma": "^5.8.1",
+    "tailwindcss": "3.4.1",
+    "postcss": "8.4.33",
+    "autoprefixer": "10.4.17",
+    "eslint": "8.56.0",
+    "eslint-config-next": "14.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
