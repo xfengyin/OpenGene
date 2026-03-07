@@ -173,4 +173,4 @@ MIT License © 2026 OpenGene
 
 <p align="center">
   Made with 💜 by <a href="https://github.com/xfengyin">xfengyin</a>
-</p>
+</p>// TypeScript fixes
