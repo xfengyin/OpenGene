@@ -22,7 +22,6 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [hoveredProject, setHoveredProject] = useState<Project | null>(null)
 
-  // 生成节点位置
   const generateNodes = (projects: Project[]) => {
     return projects.map((project, index) => {
       const angle = (index / projects.length) * Math.PI * 2
@@ -31,18 +30,18 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
       const y = 300 + Math.sin(angle) * radius
       const size = Math.max(20, Math.min(60, Math.log10(project.stargazers_count + 1) * 10))
       
-      // 根据语言分配颜色
+      // Stripe-aligned language colors
       const colors: Record<string, string> = {
-        'TypeScript': '#3178C6',
-        'JavaScript': '#F7DF1E',
-        'Python': '#3776AB',
-        'Rust': '#DEA584',
-        'Go': '#00ADD8',
-        'Java': '#B07219',
-        'C++': '#F34B7D',
-        'C': '#555555',
-        'Ruby': '#701516',
-        'Swift': '#FFAC45',
+        'TypeScript': '#533afd',
+        'JavaScript': '#665efd',
+        'Python': '#b9b9f9',
+        'Rust': '#ea2261',
+        'Go': '#15be53',
+        'Java': '#f96bee',
+        'C++': '#9b6829',
+        'C': '#64748d',
+        'Ruby': '#ea2261',
+        'Swift': '#f96bee',
       }
       
       return {
@@ -50,7 +49,7 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
         x,
         y,
         size,
-        color: colors[project.language || ''] || '#8B5CF6'
+        color: colors[project.language || ''] || '#533afd'
       }
     })
   }
@@ -67,7 +66,7 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight - 100
 
-    // 绘制星空背景
+    // Draw star field
     const drawStars = () => {
       for (let i = 0; i < 200; i++) {
         const x = Math.random() * canvas.width
@@ -80,9 +79,9 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
       }
     }
 
-    // 绘制连线
+    // Draw connections
     const drawConnections = () => {
-      ctx.strokeStyle = 'rgba(139, 92, 246, 0.15)'
+      ctx.strokeStyle = 'rgba(83, 58, 253, 0.15)'
       ctx.lineWidth = 1
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
@@ -100,13 +99,13 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
       }
     }
 
-    // 绘制项目节点
+    // Draw project nodes
     const drawNodes = () => {
       nodes.forEach((project: any) => {
         const isHovered = hoveredProject?.id === project.id
         const isSelected = selectedProject?.id === project.id
 
-        // 发光效果
+        // Glow effect - Stripe purple tinted
         if (isHovered || isSelected) {
           const gradient = ctx.createRadialGradient(
             project.x, project.y, 0,
@@ -120,7 +119,7 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
           ctx.fill()
         }
 
-        // 节点圆
+        // Node circle
         ctx.beginPath()
         ctx.arc(project.x, project.y, project.size, 0, Math.PI * 2)
         ctx.fillStyle = project.color
@@ -129,21 +128,21 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
         ctx.lineWidth = isHovered || isSelected ? 3 : 1
         ctx.stroke()
 
-        // 项目名称
+        // Project name - Inter-style font
         ctx.fillStyle = '#fff'
-        ctx.font = `${isHovered ? 'bold ' : ''}12px sans-serif`
+        ctx.font = `${isHovered ? '' : ''}12px Inter, sans-serif`
         ctx.textAlign = 'center'
         ctx.fillText(project.name, project.x, project.y + project.size + 15)
         
-        // Stars 数量
-        ctx.fillStyle = '#FCD34D'
-        ctx.font = '10px sans-serif'
+        // Stars count - tabular numerals
+        ctx.fillStyle = '#b9b9f9'
+        ctx.font = '10px Inter, sans-serif'
         ctx.fillText(`⭐ ${(project.stargazers_count / 1000).toFixed(1)}k`, project.x, project.y + project.size + 28)
       })
     }
 
-    // 清空并重绘
-    ctx.fillStyle = '#0a0a14'
+    // Clear and redraw - Stripe dark navy background
+    ctx.fillStyle = '#061b31'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     drawStars()
     drawConnections()
@@ -180,40 +179,45 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
         onClick={handleClick}
       />
 
-      {/* 项目详情面板 */}
+      {/* Project Detail Panel - Stripe card style */}
       {selectedProject && (
-        <div className="absolute right-4 top-20 w-80 bg-gray-900/95 backdrop-blur-md rounded-xl border border-gray-700 p-4 shadow-2xl">
+        <div className="absolute right-4 top-20 w-80 bg-white border border-stripe-border rounded-stripe-lg p-5 shadow-stripe-elevated">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold">{selectedProject.name}</h3>
+            <h3 
+              className="text-xl font-light tracking-display-xs text-stripe-heading"
+              style={{ fontFeatureSettings: '"ss01" on' }}
+            >
+              {selectedProject.name}
+            </h3>
             <button
               onClick={() => setSelectedProject(null)}
-              className="text-gray-400 hover:text-white"
+              className="text-stripe-body hover:text-stripe-heading transition"
             >
               ✕
             </button>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-3 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-400">语言</span>
-              <span style={{ color: '#8B5CF6' }}>● {selectedProject.language || 'Unknown'}</span>
+              <span className="text-stripe-body" style={{ fontFeatureSettings: '"ss01" on' }}>语言</span>
+              <span className="text-stripe-purple" style={{ fontFeatureSettings: '"ss01" on' }}>● {selectedProject.language || 'Unknown'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Stars</span>
-              <span className="text-yellow-400">⭐ {selectedProject.stargazers_count.toLocaleString()}</span>
+              <span className="text-stripe-body" style={{ fontFeatureSettings: '"ss01" on' }}>Stars</span>
+              <span className="tabular-nums text-stripe-heading font-light">⭐ {selectedProject.stargazers_count.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Forks</span>
-              <span className="text-blue-400">🍴 {selectedProject.forks_count.toLocaleString()}</span>
+              <span className="text-stripe-body" style={{ fontFeatureSettings: '"ss01" on' }}>Forks</span>
+              <span className="tabular-nums text-stripe-heading font-light">🍴 {selectedProject.forks_count.toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">健康度</span>
-              <span className={`font-bold ${selectedProject.healthScore >= 80 ? 'text-green-400' : selectedProject.healthScore >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
+              <span className="text-stripe-body" style={{ fontFeatureSettings: '"ss01" on' }}>健康度</span>
+              <span className={`tabular-nums font-light ${selectedProject.healthScore >= 80 ? 'text-stripe-success' : selectedProject.healthScore >= 60 ? 'text-stripe-lemon' : 'text-stripe-ruby'}`}>
                 {selectedProject.healthScore}%
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">生命周期</span>
-              <span className="text-blue-400">
+              <span className="text-stripe-body" style={{ fontFeatureSettings: '"ss01" on' }}>生命周期</span>
+              <span className="text-stripe-purple" style={{ fontFeatureSettings: '"ss01" on' }}>
                 {selectedProject.lifecycle === 'MATURE' ? '🌳' : 
                  selectedProject.lifecycle === 'GROWING' ? '🌿' : 
                  selectedProject.lifecycle === 'SEED' ? '🌱' : 
@@ -225,21 +229,21 @@ export default function GalaxyView({ projects }: GalaxyViewProps) {
             href={`https://github.com/${selectedProject.full_name}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full mt-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg transition text-center"
+            className="stripe-btn-primary w-full mt-5 text-sm py-2.5"
           >
             🔗 查看 GitHub
           </a>
-          <button className="w-full mt-2 py-2 bg-green-600 hover:bg-green-500 rounded-lg transition">
+          <button className="stripe-btn-ghost w-full mt-2 text-sm py-2.5">
             🔍 AI 深度诊断
           </button>
         </div>
       )}
 
-      {/* 图例 */}
-      <div className="absolute left-4 bottom-4 bg-gray-900/90 backdrop-blur-md rounded-lg p-3 text-sm">
-        <div className="text-gray-400 mb-1">节点大小 = Stars 数量</div>
-        <div className="text-gray-400">连线 = 相似项目</div>
-        <div className="mt-2 flex gap-2 text-xs">
+      {/* Legend - Stripe style */}
+      <div className="absolute left-4 bottom-4 bg-white/95 backdrop-blur-sm border border-stripe-border rounded-stripe-lg p-3 text-sm shadow-stripe-ambient">
+        <div className="text-stripe-body text-xs mb-1" style={{ fontFeatureSettings: '"ss01" on' }}>节点大小 = Stars 数量</div>
+        <div className="text-stripe-body text-xs mb-2" style={{ fontFeatureSettings: '"ss01" on' }}>连线 = 相似项目</div>
+        <div className="flex gap-3 text-xs text-stripe-label">
           <span>🌱 Seed</span>
           <span>🌿 Growing</span>
           <span>🌳 Mature</span>

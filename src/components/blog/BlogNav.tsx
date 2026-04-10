@@ -10,38 +10,38 @@ export default function BlogNav() {
   if (!isBlogPage) return null
 
   return (
-    <nav className="fixed top-16 left-0 right-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center gap-4 text-sm">
+    <nav className="fixed top-16 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-stripe-border">
+      <div className="max-w-[1080px] mx-auto px-4 py-3">
+        <div className="flex items-center gap-4 text-sm" style={{ fontFeatureSettings: '"ss01" on' }}>
           <Link 
             href="/" 
-            className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors"
+            className="flex items-center gap-1 text-stripe-body hover:text-stripe-heading transition-colors"
           >
             <span>←</span>
             <span>返回首页</span>
           </Link>
-          <span className="text-gray-600">|</span>
+          <span className="text-stripe-border">|</span>
           <Link 
             href="/blog/" 
-            className={`transition-colors ${pathname?.endsWith('/blog/') ? 'text-purple-400' : 'text-gray-400 hover:text-white'}`}
+            className={`transition-colors ${pathname?.endsWith('/blog/') ? 'text-stripe-purple font-normal' : 'text-stripe-body hover:text-stripe-heading'}`}
           >
             全部文章
           </Link>
           <Link 
             href="/blog/?category=技术" 
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-stripe-body hover:text-stripe-heading transition-colors"
           >
             技术
           </Link>
           <Link 
             href="/blog/?category=生态" 
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-stripe-body hover:text-stripe-heading transition-colors"
           >
             生态
           </Link>
           <Link 
             href="/blog/?category=趋势" 
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-stripe-body hover:text-stripe-heading transition-colors"
           >
             趋势
           </Link>

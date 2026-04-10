@@ -19,20 +19,16 @@ export default function BlogList() {
   const loadPosts = () => {
     setLoading(true)
     try {
-      // 从本地数据筛选
       let filteredPosts = mockBlogPosts.filter(p => p.status === 'published')
       
-      // 分类筛选
       if (selectedCategory !== 'all') {
         filteredPosts = filteredPosts.filter(p => p.category === selectedCategory)
       }
       
-      // 按时间排序
       filteredPosts = filteredPosts.sort((a, b) => 
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
       )
       
-      // 分页
       const limit = 10
       const start = (page - 1) * limit
       const end = start + limit
@@ -61,31 +57,32 @@ export default function BlogList() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* 页面标题 */}
+    <div className="max-w-[1080px] mx-auto px-4 py-8">
+      {/* Page Title - Stripe style */}
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">
-          <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            📝 开源博客
-          </span>
+        <h1 
+          className="text-5xl font-light tracking-display-lg leading-display-lg text-stripe-heading mb-4"
+          style={{ fontFeatureSettings: '"ss01" on' }}
+        >
+          <span className="stripe-text-gradient">开源博客</span>
         </h1>
-        <p className="text-gray-400 max-w-2xl mx-auto">
+        <p className="text-stripe-body max-w-2xl mx-auto leading-body-lg" style={{ fontFeatureSettings: '"ss01" on' }}>
           发现开源世界的故事、教程和洞见。从 AI 驱动的项目分析到技术趋势解读，
           探索开源生态的无限可能。
         </p>
       </div>
 
-      {/* 分类筛选 */}
-      <div className="flex flex-wrap justify-center gap-3 mb-8">
+      {/* Category Filter - Stripe ghost buttons */}
+      <div className="flex flex-wrap justify-center gap-2 mb-8">
         <button
           onClick={() => {
             setSelectedCategory('all')
             setPage(1)
           }}
-          className={`px-4 py-2 rounded-full transition ${
+          className={`px-4 py-2 rounded-stripe text-sm transition cursor-pointer ${
             selectedCategory === 'all'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+              ? 'stripe-btn-primary'
+              : 'stripe-btn-ghost'
           }`}
         >
           全部
@@ -97,10 +94,10 @@ export default function BlogList() {
               setSelectedCategory(cat.id)
               setPage(1)
             }}
-            className={`px-4 py-2 rounded-full transition flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-stripe text-sm transition cursor-pointer flex items-center gap-2 ${
               selectedCategory === cat.id
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                ? 'stripe-btn-primary'
+                : 'stripe-btn-ghost'
             }`}
           >
             <span>{cat.icon}</span>
@@ -109,7 +106,7 @@ export default function BlogList() {
         ))}
       </div>
 
-      {/* 文章列表 */}
+      {/* Blog Cards */}
       {loading && posts.length === 0 ? (
         <Loading message="加载文章中..." />
       ) : posts.length === 0 ? (
@@ -123,11 +120,11 @@ export default function BlogList() {
           {posts.map(post => (
             <article
               key={post.id}
-              className="bg-gray-900/50 border border-gray-800 rounded-xl overflow-hidden card-hover"
+              className="stripe-card overflow-hidden"
             >
-              {/* 封面图 */}
+              {/* Cover Image */}
               {post.coverImage && (
-                <div className="h-48 bg-gray-800 overflow-hidden">
+                <div className="h-48 bg-stripe-border/30 overflow-hidden">
                   <img
                     src={post.coverImage}
                     alt={post.title}
@@ -136,67 +133,70 @@ export default function BlogList() {
                 </div>
               )}
               
-              {/* 内容 */}
+              {/* Content */}
               <div className="p-6">
-                {/* 分类标签 */}
+                {/* Category Tag */}
                 <div className="flex items-center gap-2 mb-3">
                   {(() => {
                     const cat = blogCategories.find(c => c.id === post.category)
                     return cat ? (
-                      <span className="text-sm text-purple-400">
+                      <span className="stripe-badge stripe-badge-purple">
                         {cat.icon} {cat.name}
                       </span>
                     ) : null
                   })()}
                   {post.featured && (
-                    <span className="text-xs bg-yellow-600/30 text-yellow-400 px-2 py-1 rounded">
+                    <span className="stripe-badge bg-yellow-50 text-stripe-lemon border border-yellow-200">
                       精选
                     </span>
                   )}
                 </div>
                 
-                {/* 标题 */}
-                <h2 className="text-xl font-bold mb-2 line-clamp-2 hover:text-purple-400 transition">
+                {/* Title */}
+                <h2 
+                  className="font-light text-xl tracking-display-xs leading-display-xs text-stripe-heading mb-2 line-clamp-2 hover:text-stripe-purple transition"
+                  style={{ fontFeatureSettings: '"ss01" on' }}
+                >
                   <Link href={`/blog/${post.slug}/`}>
                     {post.title}
                   </Link>
                 </h2>
                 
-                {/* 摘要 */}
-                <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                {/* Excerpt */}
+                <p className="text-stripe-body text-sm mb-4 line-clamp-2 leading-body" style={{ fontFeatureSettings: '"ss01" on' }}>
                   {post.excerpt}
                 </p>
                 
-                {/* 标签 */}
+                {/* Tags */}
                 <div className="flex flex-wrap gap-2 mb-4">
                   {post.tags.slice(0, 3).map(tag => (
                     <span
                       key={tag}
-                      className="text-xs bg-gray-800 text-gray-400 px-2 py-1 rounded"
+                      className="stripe-tag"
                     >
                       #{tag}
                     </span>
                   ))}
                 </div>
                 
-                {/* 作者和统计 */}
-                <div className="flex items-center justify-between text-sm text-gray-500">
+                {/* Author and Stats */}
+                <div className="flex items-center justify-between text-sm text-stripe-body">
                   <div className="flex items-center gap-2">
                     <img
                       src={post.author.avatar}
                       alt={post.author.name}
                       className="w-6 h-6 rounded-full"
                     />
-                    <span>{post.author.name}</span>
+                    <span style={{ fontFeatureSettings: '"ss01" on' }}>{post.author.name}</span>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 tabular-nums" style={{ fontFeatureSettings: '"tnum" on, "ss01" on' }}>
                     <span>👁 {post.views.toLocaleString()}</span>
                     <span>❤️ {post.likes}</span>
                   </div>
                 </div>
                 
-                {/* 发布时间 */}
-                <div className="mt-3 text-xs text-gray-600">
+                {/* Publish Date */}
+                <div className="mt-3 text-xs text-stripe-body/60" style={{ fontFeatureSettings: '"ss01" on' }}>
                   {formatDate(post.publishedAt)}
                 </div>
               </div>
@@ -205,13 +205,13 @@ export default function BlogList() {
         </div>
       )}
 
-      {/* 加载更多 */}
+      {/* Load More */}
       {hasMore && posts.length > 0 && (
         <div className="text-center mt-8">
           <button
             onClick={() => setPage(p => p + 1)}
             disabled={loading}
-            className="px-8 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition disabled:opacity-50"
+            className="stripe-btn-ghost disabled:opacity-50"
           >
             {loading ? '加载中...' : '加载更多'}
           </button>

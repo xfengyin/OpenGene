@@ -38,7 +38,6 @@ export default function Home() {
   const loadProjects = async () => {
     setLoading(true)
     try {
-      // 尝试从 API 加载
       const response = await fetch('/api/github?q=stars:>1000&language=typescript')
       
       if (!response.ok) {
@@ -51,12 +50,10 @@ export default function Home() {
         setProjects(data)
         setToast({ message: `已加载 ${data.length} 个项目`, type: 'success' })
       } else {
-        // 如果 API 返回空数据，使用模拟数据
         loadMockProjects()
       }
     } catch (err) {
       console.error('Failed to load projects:', err)
-      // 使用模拟数据
       loadMockProjects()
     } finally {
       setLoading(false)
@@ -127,40 +124,48 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-950">
-      {/* 导航栏 */}
-      <nav className="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur-md border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <main className="min-h-screen bg-stripe-white">
+      {/* Stripe-style Navigation */}
+      <nav className="stripe-nav fixed top-0 w-full z-50">
+        <div className="max-w-[1080px] mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">🧬</span>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              OpenGene
+            <span className="text-xl font-light tracking-display-xs text-stripe-heading" style={{ fontFeatureSettings: '"ss01" on' }}>
+              <span className="stripe-text-gradient font-normal">OpenGene</span>
             </span>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <a 
               href="/blog/"
-              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition"
+              className="stripe-btn-ghost text-sm py-1.5 px-3"
             >
               📝 博客
             </a>
             <button 
               onClick={() => setActiveView('galaxy')}
-              className={`px-4 py-2 rounded-lg transition ${activeView === 'galaxy' ? 'bg-purple-600' : 'bg-gray-800 hover:bg-gray-700'}`}
+              className={`text-sm py-1.5 px-3 rounded-stripe transition cursor-pointer ${
+                activeView === 'galaxy' 
+                  ? 'stripe-btn-primary' 
+                  : 'stripe-btn-ghost'
+              }`}
             >
               🌌 星系图谱
             </button>
             <button 
               onClick={() => setActiveView('list')}
-              className={`px-4 py-2 rounded-lg transition ${activeView === 'list' ? 'bg-purple-600' : 'bg-gray-800 hover:bg-gray-700'}`}
+              className={`text-sm py-1.5 px-3 rounded-stripe transition cursor-pointer ${
+                activeView === 'list' 
+                  ? 'stripe-btn-primary' 
+                  : 'stripe-btn-ghost'
+              }`}
             >
               📋 项目列表
             </button>
             <button 
               onClick={loadProjects}
               disabled={isLoading}
-              className="px-4 py-2 bg-green-600 hover:bg-green-500 disabled:bg-gray-700 rounded-lg transition"
+              className="stripe-btn-primary text-sm py-1.5 px-3"
             >
               {isLoading ? '⏳' : '🔄'} 刷新
             </button>
@@ -168,7 +173,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* 主内容区 */}
+      {/* Main Content */}
       <div className="pt-16 pb-16">
         <ErrorBoundary>
           {isLoading && projects.length === 0 ? (
@@ -176,7 +181,7 @@ export default function Home() {
           ) : activeView === 'galaxy' ? (
             <GalaxyView projects={projects} />
           ) : (
-            <div className="max-w-7xl mx-auto px-4 py-8">
+            <div className="max-w-[1080px] mx-auto px-4 py-8">
               <HeroSection />
               <ProjectList projects={projects} />
               <div className="mt-8">
@@ -187,17 +192,25 @@ export default function Home() {
         </ErrorBoundary>
       </div>
 
-      {/* 底部统计 */}
-      <footer className="fixed bottom-0 w-full bg-gray-950/90 backdrop-blur-md border-t border-gray-800 py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-center gap-8 text-sm text-gray-400">
-          <span>🧬 <span className="text-purple-400 font-bold">{projects.length}</span> 项目</span>
-          <span>👥 <span className="text-green-400 font-bold">AI</span> 驱动</span>
-          <span>🔗 <span className="text-blue-400 font-bold">实时</span> 同步</span>
-          <span>🤖 <span className="text-pink-400 font-bold">智能</span> 分析</span>
+      {/* Stripe-style Footer */}
+      <footer className="stripe-dark-section fixed bottom-0 w-full py-2.5">
+        <div className="max-w-[1080px] mx-auto px-4 flex justify-center gap-8 text-sm">
+          <span className="text-white/60">
+            🧬 <span className="tabular-nums text-white font-light">{projects.length}</span> 项目
+          </span>
+          <span className="text-white/60">
+            👥 <span className="text-white font-light">AI</span> 驱动
+          </span>
+          <span className="text-white/60">
+            🔗 <span className="text-white font-light">实时</span> 同步
+          </span>
+          <span className="text-white/60">
+            🤖 <span className="text-white font-light">智能</span> 分析
+          </span>
         </div>
       </footer>
 
-      {/* Toast 通知 */}
+      {/* Toast Notification */}
       {toast && (
         <Toast
           message={toast.message}

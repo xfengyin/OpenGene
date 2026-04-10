@@ -9,29 +9,29 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-gray-950">
-      {/* 主导航栏 */}
-      <nav className="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur-md border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <main className="min-h-screen bg-stripe-white">
+      {/* Stripe-style Navigation */}
+      <nav className="stripe-nav fixed top-0 w-full z-50">
+        <div className="max-w-[1080px] mx-auto px-4 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center gap-2">
             <span className="text-2xl">🧬</span>
-            <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              OpenGene
+            <span className="text-xl font-light tracking-display-xs text-stripe-heading" style={{ fontFeatureSettings: '"ss01" on' }}>
+              <span className="stripe-text-gradient font-normal">OpenGene</span>
             </span>
           </a>
           <a 
             href="/"
-            className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition text-sm"
+            className="stripe-btn-ghost text-sm py-1.5 px-3"
           >
             ← 返回首页
           </a>
         </div>
       </nav>
 
-      {/* 博客子导航 */}
+      {/* Blog Sub-nav */}
       <BlogNav />
 
-      {/* 主内容 */}
+      {/* Main Content */}
       <div className="pt-32">
         <BlogList />
       </div>

@@ -2,38 +2,244 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;700&display=swap');
+
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 10, 10, 20;
-  --background-end-rgb: 5, 5, 15;
+  --stripe-purple: #533afd;
+  --stripe-purple-hover: #4434d4;
+  --stripe-navy: #061b31;
+  --stripe-brand-dark: #1c1e54;
+  --stripe-white: #ffffff;
+  --stripe-border: #e5edf5;
+  --stripe-heading: #061b31;
+  --stripe-label: #273951;
+  --stripe-body: #64748d;
+  --stripe-ruby: #ea2261;
+  --stripe-magenta: #f96bee;
+}
+
+html {
+  font-feature-settings: "ss01" on;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
+  font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  font-feature-settings: "ss01" on;
+  color: var(--stripe-body);
+  background: var(--stripe-white);
   min-height: 100vh;
 }
 
-/* 星系背景 */
-.galaxy-bg {
-  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1a 100%);
+h1, h2, h3, h4, h5, h6 {
+  color: var(--stripe-heading);
+  font-weight: 300;
+  font-feature-settings: "ss01" on;
 }
 
-/* 发光效果 */
-.glow-purple {
-  box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
-}
-
-.glow-green {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-}
-
-/* 卡片悬浮 */
-.card-hover {
+/* Stripe Card */
+.stripe-card {
+  background: var(--stripe-white);
+  border: 1px solid var(--stripe-border);
+  border-radius: 6px;
+  box-shadow: rgba(50,50,93,0.1) 0px 12px 24px -12px, rgba(0,0,0,0.06) 0px 8px 16px -8px;
   transition: all 0.3s ease;
 }
 
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+.stripe-card:hover {
+  box-shadow: rgba(50,50,93,0.25) 0px 30px 45px -30px, rgba(0,0,0,0.1) 0px 18px 36px -18px;
+  transform: translateY(-2px);
+}
+
+/* Stripe Button: Primary */
+.stripe-btn-primary {
+  background: var(--stripe-purple);
+  color: var(--stripe-white);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 16px;
+  font-feature-settings: "ss01" on;
+  transition: all 0.2s ease;
+  box-shadow: rgba(50,50,93,0.15) 0px 4px 12px -2px, rgba(0,0,0,0.08) 0px 2px 6px -2px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stripe-btn-primary:hover {
+  background: var(--stripe-purple-hover);
+  box-shadow: rgba(50,50,93,0.25) 0px 8px 20px -4px, rgba(0,0,0,0.12) 0px 4px 10px -4px;
+}
+
+.stripe-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Stripe Button: Ghost */
+.stripe-btn-ghost {
+  background: transparent;
+  color: var(--stripe-purple);
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #b9b9f9;
+  font-weight: 400;
+  font-size: 16px;
+  font-feature-settings: "ss01" on;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.stripe-btn-ghost:hover {
+  background: rgba(83,58,253,0.05);
+}
+
+/* Stripe Dark Section */
+.stripe-dark-section {
+  background: var(--stripe-brand-dark);
+  color: var(--stripe-white);
+}
+
+.stripe-dark-section h1,
+.stripe-dark-section h2,
+.stripe-dark-section h3,
+.stripe-dark-section h4,
+.stripe-dark-section h5,
+.stripe-dark-section h6 {
+  color: var(--stripe-white);
+}
+
+/* Stripe Input */
+.stripe-input {
+  border: 1px solid var(--stripe-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--stripe-heading);
+  background: var(--stripe-white);
+  transition: all 0.2s ease;
+  outline: none;
+  font-feature-settings: "ss01" on;
+}
+
+.stripe-input:focus {
+  border-color: var(--stripe-purple);
+  box-shadow: 0 0 0 2px rgba(83,58,253,0.15);
+}
+
+.stripe-input::placeholder {
+  color: var(--stripe-body);
+}
+
+/* Stripe Badge */
+.stripe-badge {
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 400;
+  font-feature-settings: "ss01" on;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stripe-badge-success {
+  background: rgba(21,190,83,0.2);
+  color: #108c3d;
+  border: 1px solid rgba(21,190,83,0.4);
+}
+
+.stripe-badge-purple {
+  background: rgba(83,58,253,0.08);
+  color: var(--stripe-purple);
+  border: 1px solid rgba(83,58,253,0.2);
+}
+
+/* Stripe Tag/Pill */
+.stripe-tag {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  font-feature-settings: "ss01" on;
+  background: rgba(83,58,253,0.06);
+  color: var(--stripe-purple);
+  border: 1px solid rgba(83,58,253,0.15);
+  transition: all 0.2s ease;
+}
+
+.stripe-tag:hover {
+  background: rgba(83,58,253,0.1);
+}
+
+/* Stripe Nav */
+.stripe-nav {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--stripe-border);
+}
+
+/* Tabular Numerals */
+.tabular-nums {
+  font-feature-settings: "tnum" on, "ss01" on;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Stripe Gradient */
+.stripe-gradient-hero {
+  background: linear-gradient(135deg, #ea2261, #f96bee);
+}
+
+.stripe-gradient-brand {
+  background: linear-gradient(135deg, #533afd, #665efd);
+}
+
+.stripe-text-gradient {
+  background: linear-gradient(135deg, #533afd, #665efd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Galaxy Dark Background (for canvas only) */
+.galaxy-bg {
+  background: radial-gradient(ellipse at center, #0d253d 0%, #061b31 100%);
+}
+
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f8fafc;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }

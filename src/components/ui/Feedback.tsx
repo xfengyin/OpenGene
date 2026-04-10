@@ -25,17 +25,22 @@ export function ErrorBoundary({ children, fallback }: ErrorBoundaryProps) {
   if (hasError) {
     return (
       <div className="min-h-[400px] flex items-center justify-center">
-        <div className="text-center p-8 bg-gray-900 rounded-xl border border-red-500/30">
+        <div className="text-center p-8 bg-white border border-stripe-border rounded-stripe-xl shadow-stripe-elevated">
           <div className="text-4xl mb-4">😵</div>
-          <h2 className="text-xl font-bold text-red-400 mb-2">出错了</h2>
-          <p className="text-gray-400 mb-4">{error?.message || '发生了未知错误'}</p>
+          <h2 
+            className="text-xl font-light text-stripe-ruby mb-2"
+            style={{ fontFeatureSettings: '"ss01" on' }}
+          >
+            出错了
+          </h2>
+          <p className="text-stripe-body mb-4" style={{ fontFeatureSettings: '"ss01" on' }}>{error?.message || '发生了未知错误'}</p>
           <button
             onClick={() => {
               setHasError(false)
               setError(null)
               window.location.reload()
             }}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg transition"
+            className="stripe-btn-primary text-sm"
           >
             重新加载
           </button>
@@ -61,8 +66,8 @@ export function Loading({ message = '加载中...', size = 'md' }: LoadingProps)
 
   return (
     <div className="flex flex-col items-center justify-center p-8">
-      <div className={`${sizeClasses[size]} animate-spin rounded-full border-b-2 border-purple-500`}></div>
-      <p className="mt-4 text-gray-400">{message}</p>
+      <div className={`${sizeClasses[size]} animate-spin rounded-full border-2 border-stripe-border border-t-stripe-purple`}></div>
+      <p className="mt-4 text-stripe-body text-sm" style={{ fontFeatureSettings: '"ss01" on' }}>{message}</p>
     </div>
   )
 }
@@ -80,13 +85,18 @@ interface EmptyStateProps {
 export function EmptyState({ icon = '🔍', title, description, action }: EmptyStateProps) {
   return (
     <div className="text-center py-12">
-      <div className="text-6xl mb-4">{icon}</div>
-      <h3 className="text-xl font-bold text-gray-300 mb-2">{title}</h3>
-      {description && <p className="text-gray-400 mb-4">{description}</p>}
+      <div className="text-5xl mb-4">{icon}</div>
+      <h3 
+        className="text-xl font-light text-stripe-heading mb-2"
+        style={{ fontFeatureSettings: '"ss01" on' }}
+      >
+        {title}
+      </h3>
+      {description && <p className="text-stripe-body mb-4" style={{ fontFeatureSettings: '"ss01" on' }}>{description}</p>}
       {action && (
         <button
           onClick={action.onClick}
-          className="px-6 py-2 bg-purple-600 hover:bg-purple-500 rounded-lg transition"
+          className="stripe-btn-primary text-sm"
         >
           {action.label}
         </button>
@@ -102,11 +112,11 @@ interface ToastProps {
 }
 
 export function Toast({ message, type = 'info', onClose }: ToastProps) {
-  const colors = {
-    success: 'bg-green-600',
-    error: 'bg-red-600',
-    warning: 'bg-yellow-600',
-    info: 'bg-blue-600'
+  const bgColors = {
+    success: 'bg-stripe-success',
+    error: 'bg-stripe-ruby',
+    warning: 'bg-stripe-lemon',
+    info: 'bg-stripe-purple'
   }
 
   useEffect(() => {
@@ -117,7 +127,7 @@ export function Toast({ message, type = 'info', onClose }: ToastProps) {
   }, [onClose])
 
   return (
-    <div className={`fixed bottom-4 right-4 px-6 py-3 ${colors[type]} rounded-lg shadow-lg z-50 animate-fade-in`}>
+    <div className={`fixed bottom-4 right-4 px-5 py-3 ${bgColors[type]} text-white rounded-stripe shadow-stripe-elevated z-50 animate-fade-in text-sm`} style={{ fontFeatureSettings: '"ss01" on' }}>
       <div className="flex items-center gap-2">
         <span>{message}</span>
         {onClose && (
